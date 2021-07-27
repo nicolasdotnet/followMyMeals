@@ -23,3 +23,4 @@
 hs_err_pid*
 config_service/nbactions.xml
 register_service/nbactions.xml
+stock_service/nbactions.xml
