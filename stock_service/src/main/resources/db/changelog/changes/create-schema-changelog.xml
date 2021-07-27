@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+   
+    <changeSet author="nicolasdotnet" id="1">
+        <createTable tableName="produit">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(50)">
+            </column>
+            <column name="last_modified_t" type="BIGINT">
+            </column>
+            <column name="produit_name" type="VARCHAR(100)">
+            </column>
+            <column name="ingredients_text" type="VARCHAR(9000)">
+            </column>
+            <column name="produit_details_id" type="BIGINT">
+            </column>
+            <column name="nutrition_grades" type="VARCHAR(1)">
+            </column>
+            <column name="nutriment_id" type="BIGINT">
+            </column>
+        </createTable>    
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="2">
+        <createTable tableName="produit_details">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="date" type="DATE">
+            </column>
+            <column name="quantity" type="INT">
+            </column>
+            <column name="in_stock" type="BOOLEAN">
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="3">
+        <createTable tableName="nutriment">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="energy_100G" type="INT">
+            </column>
+            <column name="energy_kj_unit" type="VARCHAR(10)">
+            </column>
+            <column name="fat_100G" type="FLOAT">
+            </column>
+            <column name="fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="saturated_fat_100G" type="FLOAT">
+            </column>
+            <column name="saturated_fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="carbohydrates_100G" type="FLOAT">
+            </column>
+            <column name="carbohydrates_unit" type="VARCHAR(10)">
+            </column>
+            <column name="sugars_100G" type="FLOAT">
+            </column>
+            <column name="sugars_unit" type="VARCHAR(10)">
+            </column>
+            <column name="fiber_100G" type="FLOAT">
+            </column>
+            <column name="fiber_unit" type="VARCHAR(10)">
+            </column>
+            <column name="proteins_100G" type="FLOAT">
+            </column>
+            <column name="proteins_unit" type="VARCHAR(10)">
+            </column>
+            <column name="salt_100G" type="FLOAT">
+            </column>
+            <column name="salt_unit" type="VARCHAR(10)">
+            </column>
+            
+        </createTable>
+    </changeSet>
+  
+    <changeSet author="nicolasdotnet" id="4">
+        
+        <addForeignKeyConstraint baseTableName="produit" baseColumnNames="produit_details_id" constraintName="produit2produit_details" 
+                                 referencedTableName="produit_details" referencedColumnNames="id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="produit" baseColumnNames="nutriment_id" constraintName="produit2nutriment" 
+                                 referencedTableName="nutriment" referencedColumnNames="id" onDelete="CASCADE"/>
+           
+        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="5">
+        
+        <addColumn tableName="nutriment" >		
+            <column name="calcium_100G" type="FLOAT">
+            </column>
+            <column name="calcium_unit" type="VARCHAR(10)">
+            </column>
+            <column name="iron_100G" type="FLOAT">
+            </column>
+            <column name="iron_unit" type="VARCHAR(10)">
+            </column>
+            <column name="vitamin_a_100G" type="FLOAT">
+            </column>
+            <column name="vitamin_a_unit" type="VARCHAR(10)">
+            </column>
+            <column name="vitamin_c_100G" type="FLOAT">
+            </column>
+            <column name="vitamin_c_unit" type="VARCHAR(10)">
+            </column>
+            <column name="vitamin_d_100G" type="FLOAT">
+            </column>
+            <column name="vitamin_d_unit" type="VARCHAR(10)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+
+    <changeSet author="nicolasdotnet" id="6">
+        
+        <addColumn tableName="produit" >		
+            <column name="weight" type="VARCHAR(20)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+   
+
+    <changeSet author="nicolasdotnet" id="7">
+        
+        <addColumn tableName="produit_details" >		
+            <column name="weight" type="FLOAT">
+            </column>
+        </addColumn>
+        <addColumn tableName="produit_details" >		
+            <column name="weight_unit" type="VARCHAR(10)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+        <changeSet author="nicolasdotnet" id="8">
+        
+        <addColumn tableName="produit_details" >		
+            <column name="remaining_quantity" type="FLOAT">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+    
+</databaseChangeLog>
