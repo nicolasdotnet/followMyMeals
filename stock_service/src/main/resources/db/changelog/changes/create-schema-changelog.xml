@@ -141,10 +141,28 @@
         
     </changeSet>
     
-        <changeSet author="nicolasdotnet" id="8">
+    <changeSet author="nicolasdotnet" id="8">
         
         <addColumn tableName="produit_details" >		
             <column name="remaining_quantity" type="FLOAT">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="9">
+        
+        <addColumn tableName="produit" >		
+            <column name="brand" type="VARCHAR(200)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="10">
+        
+        <addColumn tableName="produit" >		
+            <column name="image_front_url" type="VARCHAR(500)">
             </column>
         </addColumn>
         

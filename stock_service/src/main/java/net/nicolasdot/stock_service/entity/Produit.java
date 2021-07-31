@@ -23,17 +23,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class Produit implements Serializable {
 
-    // revoir strat generationType
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column()
     private String code;
-    
-    // poid 
-    
-    // unité poid 
 
     @Column(name = "last_modified_t")
     private Long lastModifiedT;
@@ -41,11 +36,17 @@ public class Produit implements Serializable {
     @Column(name = "produit_name")
     private String produitName;
 
+    @Column(name = "brand")
+    private String brand;
+
+    @Column(name = "image_front_url")
+    private String imageFrontUrl;
+
     @Column(name = "ingredients_text", length = 9000)
     private String ingredientsText;
-    
+
     @Column(name = "weight")
-    private String Weight;
+    private String weight;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "produit_details_id", referencedColumnName = "id")
