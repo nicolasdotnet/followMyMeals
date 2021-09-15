@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item active">Les produits</li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+                <span th:text="${error}"></span>
+
+                <div class="mx-auto" th:insert="/produit/multisearch.html::form">
+                </div>
+            </div>
+
+            <div class="table-responsive mt-1">
+                <table class="table table-striped">
+                    <tr th:each="p:${produitPage.content}">
+                        <td><a th:href="@{/user/produits/}+${p.id}"  ><img class="img" th:src="@{${p.imageFrontUrl}}"/></a></td>
+                        <td>
+                            <div>
+                                <span th:text="${p.produitName}"></span>
+                            </div>
+                            <div>
+                                <span th:text="${p.brand}"></span>
+                            </div>
+                            <div>
+                                <span th:text="${p.weight}"></span>
+                            </div>
+                            <div>
+                                <label>Code barre :</label>
+                                <span th:text="${p.code}"></span>
+                            </div>
+                            <div>
+                                <label>Nutri Score :</label>
+                                <span th:text="${p.nutritionGrades}"></span>
+                            </div>
+                            <div>
+                                <span th:text="${p.produitDetails.InStock} ? 'En stock' : 'Pas en stock'"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="container">
+            <nav class="nav nav-pills" th:if="${produitPage.totalPages > 0}">
+                <li th:each="pageNumber : ${pageNumbers}">
+                    <a class="btn btn-outline-danger btn-sm mr-1" th:href="@{/user/stock?page=}+${pageNumber}+@{&size=}+${size}"
+                       th:text=${pageNumber}></a>
+                </li>
+            </nav>
+        </div>
+    </main>
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/meals">Les repas</a></li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+                <span th:text="${error}"></span>
+            </div>
+
+            <h1>Ajouter des ingrédients</h1>
+
+            <div class="table-responsive mt-1">
+                <form method="post" th:action="@{/user/consumables}" th:object="${consumableDTO}" class="col card p-3 mb-5">
+                    <div class="form-group">
+                        <label for="quantity">Quantité en gramme</label>
+                        <input id="quantity" placeholder="Quantité" required type="text" th:field="*{quantity}"
+                               class="form-control" autofocus="autofocus"/>
+                    </div>
+                    <div class="form-group">
+                        <input hidden id="mealId" placeholder="mealId" th:value="${consumableDTO.mealId}" type="text" th:field="*{mealId}"
+                               class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <select id="produitId" required th:field="*{produitId}" class="form-control ">
+                            <option value="" hidden>Selection un produit</option>
+                            <option th:each="p:${produitList}"
+                                    th:value="${p.id}"
+                                    th:text="${p.produitName}">
+                            </option>
+                        </select>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Ajouter un produit">
+                </form>
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(consumables)}">
+                        <td colspan="5">Pas encore de produit au menu...!</td>
+                    </tr>
+                    <tr th:each="consumable:${consumables}">
+                        <td><a th:href="@{/user/consumables/}+${consumable.id}" th:text="${consumable.consumableName}"></a></td>
+                        <td th:text="${consumable.quantity}+' gr'"></td>
+                        <td><form th:action="@{/user/consumables/}+${consumable.id}+@{/delete}">
+                                <button class="btn btn-primary x float-right"
+                                        onclick="return confirm('Êtes-vous sûr ?')">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+    </main>
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

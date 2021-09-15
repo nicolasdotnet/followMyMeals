@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+   
+    <changeSet author="nicolasdotnet" id="1">
+        <createTable tableName="meal_type">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="label" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="2">
+        <createTable tableName="meal">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(500)">
+            </column>
+            <column name="date" type="DATE">
+            </column>
+            <column name="validate" type="BOOLEAN">
+            </column>
+            <column name="meal_type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="composition_id" type="BIGINT">
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="3">
+        <createTable tableName="composition">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="4">
+        <createTable tableName="consumable">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="produit_id" type="BIGINT">
+            </column>
+            <column name="user_id" type="VARCHAR(500)">
+            </column>
+            <column name="favory" type="BOOLEAN">
+            </column>
+            <column name="validate" type="BOOLEAN">
+            </column>
+            <column name="meal_id" type="BIGINT">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="consumable_nutriment_id" type="BIGINT">
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="5">
+        <createTable tableName="consumable_nutriment">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="grade" type="VARCHAR(1)">
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="6">
+        <addForeignKeyConstraint baseTableName="meal" baseColumnNames="meal_type_id" constraintName="meal2meal_type" 
+                                 referencedTableName="meal_type" referencedColumnNames="id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="meal" baseColumnNames="composition_id" constraintName="produit2composition" 
+                                 referencedTableName="composition" referencedColumnNames="id" onDelete="CASCADE"/>
+           
+        <addForeignKeyConstraint baseTableName="consumable" baseColumnNames="meal_id" constraintName="consumale2meal" 
+                                 referencedTableName="meal" referencedColumnNames="id"/>
+          
+        <addForeignKeyConstraint baseTableName="consumable" baseColumnNames="consumable_nutriment_id" constraintName="consumale2consumable_nutriment"
+                                 referencedTableName="consumable_nutriment" referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="7">       
+        <addColumn tableName="consumable">		
+            <column name="quantity" position="2" type="FLOAT"/>
+            <column name="quantity_unit" type="VARCHAR(10)"/>  
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="8">
+        <dropForeignKeyConstraint baseTableName="consumable" constraintName="consumale2meal"/>
+    
+        <addForeignKeyConstraint baseTableName="consumable" baseColumnNames="meal_id" constraintName="consumale2meal"
+                                 referencedTableName="meal" referencedColumnNames="id" onDelete="NO ACTION"/> 
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="9">
+        
+        <addColumn tableName="consumable_nutriment" >		
+            <column name="calcium" type="FLOAT">
+            </column>
+            <column name="calcium_unit" type="VARCHAR(10)">
+            </column>
+            <column name="iron" type="FLOAT">
+            </column>
+            <column name="iron_unit" type="VARCHAR(10)">
+            </column>
+            <column name="vitamin_a" type="FLOAT">
+            </column>
+            <column name="vitamin_a_unit" type="VARCHAR(10)">
+            </column>
+            <column name="vitamin_c" type="FLOAT">
+            </column>
+            <column name="vitamin_c_unit" type="VARCHAR(10)">
+            </column>
+            <column name="vitamin_d" type="FLOAT">
+            </column>
+            <column name="vitamin_d_unit" type="VARCHAR(10)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="10">
+        
+        <addColumn tableName="consumable_nutriment" >		
+            <column name="energy" type="INT">
+            </column>
+            <column name="energy_kj_unit" type="VARCHAR(10)">
+            </column>
+            <column name="fat" type="FLOAT">
+            </column>
+            <column name="fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="saturated_fat" type="FLOAT">
+            </column>
+            <column name="saturated_fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="carbohydrates" type="FLOAT">
+            </column>
+            <column name="carbohydrates_unit" type="VARCHAR(10)">
+            </column>
+            <column name="sugars" type="FLOAT">
+            </column>
+            <column name="sugars_unit" type="VARCHAR(10)">
+            </column>
+            <column name="fiber" type="FLOAT">
+            </column>
+            <column name="fiber_unit" type="VARCHAR(10)">
+            </column>
+            <column name="proteins" type="FLOAT">
+            </column>
+            <column name="proteins_unit" type="VARCHAR(10)">
+            </column>
+            <column name="salt" type="FLOAT">
+            </column>
+            <column name="salt_unit" type="VARCHAR(10)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="11">
+        
+        <addColumn tableName="composition" >
+            <column name="energy" type="INT">
+            </column>
+            <column name="energy_kj_unit" type="VARCHAR(10)">
+            </column> 
+        </addColumn>
+
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="12">
+        <addColumn tableName="consumable" >
+            <column name="consumable_name" type="VARCHAR(100)">
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="13">
+        
+        <addColumn tableName="composition" >
+            <column name="fat" type="FLOAT">
+            </column>
+            <column name="fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="saturated_fat" type="FLOAT">
+            </column>
+            <column name="saturated_fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="carbohydrates" type="FLOAT">
+            </column>
+            <column name="carbohydrates_unit" type="VARCHAR(10)">
+            </column>
+            <column name="sugars" type="FLOAT">
+            </column>
+            <column name="sugars_unit" type="VARCHAR(10)">
+            </column>
+            <column name="proteins" type="FLOAT">
+            </column>
+            <column name="proteins_unit" type="VARCHAR(10)">
+            </column>
+            <column name="salt" type="FLOAT">
+            </column>
+            <column name="salt_unit" type="VARCHAR(10)">
+            </column> 
+        </addColumn>
+
+    </changeSet>
+    
+    
+    <changeSet author="nicolasdotnet" id="14">
+        
+        <addColumn tableName="meal" >
+            <column name="validate_date" type="DATE">
+            </column> 
+        </addColumn>
+
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="15">
+        <createTable tableName="reporting">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(500)">
+            </column>
+            <column name="date" type="DATE">
+            </column>
+            <column name="energy" type="INT">
+            </column>
+            <column name="energy_kj_unit" type="VARCHAR(10)">
+            </column> 
+            <column name="fat" type="FLOAT">
+            </column>
+            <column name="fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="saturated_fat" type="FLOAT">
+            </column>
+            <column name="saturated_fat_unit" type="VARCHAR(10)">
+            </column>
+            <column name="carbohydrates" type="FLOAT">
+            </column>
+            <column name="carbohydrates_unit" type="VARCHAR(10)">
+            </column>
+            <column name="sugars" type="FLOAT">
+            </column>
+            <column name="sugars_unit" type="VARCHAR(10)">
+            </column>
+            <column name="proteins" type="FLOAT">
+            </column>
+            <column name="proteins_unit" type="VARCHAR(10)">
+            </column>
+            <column name="salt" type="FLOAT">
+            </column>
+            <column name="salt_unit" type="VARCHAR(10)">
+            </column> 
+            
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="16">
+         <addColumn tableName="reporting">
+            <column name="number_meals" type="INT">
+            </column>
+            <column name="today" type="DATE">
+            </column>
+            <column name="seventh_day" type="DATE">
+            </column>
+            
+         </addColumn>
+    </changeSet>
+    
+    
+</databaseChangeLog>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/reportings">Reporting</a></li>
+                </ol>
+            </nav>
+
+            <div th:text="${error}"></div>
+            <div th:text="${msg}"></div>
+
+            <!-- comment <h2 th:text=${reporting.id}></h2>-->
+
+            <div class="row container mt-4 pr-0 pl-0">
+               <!--  <div  class="col-sm-8 d-none d-sm-block"><h3>Informations</h3></div>-->
+
+            </div>
+
+            <div class="panel panel-default" th:if="${reporting != null}">
+                <div class="panel-body">
+                    <div>
+                        <label>Période : </label>
+                        <span th:text="'du '+${#dates.format(reporting.seventhDay,'dd MMM yyyy')}+ ' au ' + ${#dates.format(reporting.today,'dd MMM yyyy')}"></span> 
+                    </div>
+                    <div>
+                        <label>Vous avez consommé:</label>
+                        <span th:text="${reporting.numberMeals}+' repas'"></span>
+                    </div>                  
+                    <h5>Apport nutritionel</h5>
+                    <div class="row container mt-4 pr-0 pl-0">
+                        <div  class="col-sm-8 d-none d-sm-block">
+                            <div class="table-responsive mt-1">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td>ENERGIE</td>
+                                        <td th:text="${reporting.energy} + ' ' + ${reporting.energyKjUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>MATIERES GRASSES</td>
+                                        <td th:text="${reporting.fat} + ' ' + ${reporting.fatUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dont acides gras saturés</td>
+                                        <td th:text="${reporting.saturatedFat} + ' ' + ${reporting.saturatedFatUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GLUCIDES</td>
+                                        <td th:text="${reporting.carbohydrates} + ' ' + ${reporting.carbohydratesUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dont sucres</td>
+                                        <td th:text="${reporting.sugars} + ' ' + ${reporting.sugarsUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>PROTEINES</td>
+                                        <td th:text="${reporting.proteins} + ' ' + ${reporting.proteinsUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>SEL</td>
+                                        <td th:text="${reporting.salt} + ' ' + ${reporting.saltUnit}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </main>
+    <span th:insert="common/footer.html"></span>
+</body>
+</html>

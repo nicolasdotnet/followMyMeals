@@ -1,0 +1,1 @@
+2021-08-22 09:55:14,647 WARN  [org.keycloak.connections.httpclient.DefaultHttpClientFactory] (default task-1) TruststoreProvider is disabled
