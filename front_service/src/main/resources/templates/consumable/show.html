@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/meals">Les repas</a></li>
+                </ol>
+            </nav>
+
+            <div th:text="${error}"></div>
+            <div th:text="${msg}"></div>
+
+            <h2 th:text=${consumableFind.consumableName}></h2>
+
+            <div class="row container mt-4 pr-0 pl-0">
+                <div  class="col-sm-8 d-none d-sm-block"><h3>Informations</h3></div>
+
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div>
+                        <label>Quantité :</label>
+                        <span th:text="${consumableFind.quantity}"></span>
+                    </div>
+                    <div>
+                        <label>N° du repas :</label>
+                        <span th:text="${consumableFind.meal.id}"></span>
+                    </div>                    
+                    <h5>Informations complémentaires</h5>
+                    <div>
+                        <label>Nutri Score : </label>
+                        <span th:text="${consumableFind.consumableNutriment.grade}"></span>
+                    </div>
+                    <div class="row container mt-4 pr-0 pl-0">
+                        <div  class="col-sm-8 d-none d-sm-block">
+                            <div class="table-responsive mt-1">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <td>ENERGIE</td>
+                                        <td th:text="${consumableFind.consumableNutriment.energy} + ' ' + ${consumableFind.consumableNutriment.energyKjUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>MATIERES GRASSES</td>
+                                        <td th:text="${consumableFind.consumableNutriment.fat} + ' ' + ${consumableFind.consumableNutriment.fatUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dont acides gras saturés</td>
+                                        <td th:text="${consumableFind.consumableNutriment.saturatedFat} + ' ' + ${consumableFind.consumableNutriment.saturatedFatUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GLUCIDES</td>
+                                        <td th:text="${consumableFind.consumableNutriment.carbohydrates} + ' ' + ${consumableFind.consumableNutriment.carbohydratesUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dont sucres</td>
+                                        <td th:text="${consumableFind.consumableNutriment.sugars} + ' ' + ${consumableFind.consumableNutriment.sugarsUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>PROTEINES</td>
+                                        <td th:text="${consumableFind.consumableNutriment.proteins} + ' ' + ${consumableFind.consumableNutriment.proteinsUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>SEL</td>
+                                        <td th:text="${consumableFind.consumableNutriment.salt} + ' ' + ${consumableFind.consumableNutriment.saltUnit}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <span th:insert="common/footer.html"></span>
+</body>
+</html>

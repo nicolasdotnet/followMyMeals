@@ -1,0 +1,83 @@
+<!-- Le doctype permet de savoir quelle version de HTML est utilisée sur la page -->
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <!-- Permet de spécifier l'encodage de caractères de la page -->
+        <meta charset="UTF-8">
+        <title>Follow My Meals</title>
+        <!-- Chargement de FontAwesome-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        <!-- chargement d'une GoogleFont -->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- chargement de bootstrap css -->
+        <link rel='stylesheet' type='text/css' href='/webjars/bootstrap/4.5.0/css/bootstrap.min.css' />
+        <!-- chargement de la feuille de style personnalisée-->
+        <link rel='stylesheet' type='text/css' href='/styles.css' />
+    </head>
+
+
+    <!-- Corps de la page (ce qui s'affiche dans la fenêtre du navigateur)-->
+    <body>
+        <header>
+            <!-- menu de navigation -->
+
+            <nav class="navbar navbar-default navbar-expand-lg " role="navigation">
+                <div class="container">
+
+                    <a class="navbar-brand" style="font-family: Montserrat" href="/">Follow</br>my Meals</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/produits">Mes consultations</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/stock">Mon stock</a>
+                            </li> 
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/meals">Mes repas</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/reportings">Mon rapport</a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav ml-auto">
+
+                            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                                <a class="nav-link dropdown-toggle"  id ="navbardrop" data-toggle="dropdown">
+                                    <span/>Mon compte</a>
+
+                                <div class = "dropdown-menu">
+                                    <a class = "dropdown-item" href="/change-password">Changer le mot de passe</a>
+                                    <a class = "dropdown-item" href="/logout">Déconnexion</a>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        <ul class="nav navbar-nav ml-auto" sec:authorize="isAnonymous()">
+
+                            <li class="nav-item"><a class="nav-link" href="/sso/login">Se connecter</a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+
+        </header>
+
+
+

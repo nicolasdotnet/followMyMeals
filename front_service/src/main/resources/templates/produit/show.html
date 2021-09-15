@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/produits">Les produits</a></li>
+                </ol>
+            </nav>
+
+            <div th:text="${error}"></div>
+            <div th:text="${msg}"></div>
+
+
+            <div class="row container mt-4 pr-0 pl-0">
+                <div  class="col-sm-8 d-none d-sm-block">
+                    <img th:src="@{${produitFind.imageFrontUrl}}"/>
+                </div>
+
+                <div class="col-sm-4 d-none d-sm-block align-self-center">
+                    <div>
+                        <span th:text="${produitFind.brand}"></span>
+                    </div>
+                    <div>
+                        <span th:text="${produitFind.weight}"></span>
+                    </div>
+                    <div>
+                        <label>Code barre :</label>
+                        <span th:text="${produitFind.code}"></span>
+                    </div>
+                    <div>
+                        <label>Nutri Score :</label>
+                        <span th:text="${produitFind.nutritionGrades}"></span>
+                    </div>
+
+                    <form th:action="@{/user/produit}" th:object="${produitDTO}" th:method="post">
+                        <div>
+                            <input hidden type="number" th:value="${produitFind.id}" id="produitId" name="produitId" />
+                        </div>
+                        <button class="btn btn-primary" type="submit" name="submit">
+                            <span th:text="${produitFind.produitDetails.InStock} ? 'Retirer du stock' : 'Mettre au stock'"></span>
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <label>Ingrédients : </label>
+                    <p th:text="${produitFind.ingredientsText}"></p>
+
+                </div>
+            </div>
+            <div class="row container mt-4 pr-0 pl-0">
+                <div  class="col-sm-8 d-none d-sm-block">
+                    <div class="table-responsive mt-1">
+                        <table class="table table-striped">
+                            <tr>
+                                <th></th>
+                                <th>Pour 100 g</th>
+                            </tr>
+                            <tr>
+                                <td>ENERGIE</td>
+                                <td th:text="${produitFind.nutriment.energy100G} + ' ' + ${produitFind.nutriment.energyKjUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>MATIERES GRASSES</td>
+                                <td th:text="${produitFind.nutriment.fat100G} + ' ' + ${produitFind.nutriment.fatUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>Dont acides gras saturés</td>
+                                <td th:text="${produitFind.nutriment.saturatedFat100G} + ' ' + ${produitFind.nutriment.saturatedFatUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>GLUCIDES</td>
+                                <td th:text="${produitFind.nutriment.carbohydrates100G} + ' ' + ${produitFind.nutriment.carbohydratesUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>Dont sucres</td>
+                                <td th:text="${produitFind.nutriment.sugars100G} + ' ' + ${produitFind.nutriment.sugarsUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>PROTEINES</td>
+                                <td th:text="${produitFind.nutriment.proteins100G} + ' ' + ${produitFind.nutriment.proteinsUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>SEL</td>
+                                <td th:text="${produitFind.nutriment.salt100G}+ ' ' + ${produitFind.nutriment.saltUnit}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 d-none d-sm-block align-self-center">
+                    <div class="table-responsive mt-1">
+                        <table class="table table-striped">
+                            <tr>
+                                <th></th>
+                                <th>Pour 100 g</th>
+                            </tr>
+                            <tr>
+                                <td>FIBRES</td>
+                                <td th:text="${produitFind.nutriment.fiber100G} + ' ' + ${produitFind.nutriment.fiberUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>CALCIUM</td>
+                                <td th:text="${produitFind.nutriment.calcium100G} + ' ' + ${produitFind.nutriment.calciumUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>FER</td>
+                                <td th:text="${produitFind.nutriment.iron100G} + ' ' + ${produitFind.nutriment.ironUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>VATIMINE A</td>
+                                <td th:text="${produitFind.nutriment.vitaminA100G} + ' ' + ${produitFind.nutriment.vitaminAUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>VATIMINE C</td>
+                                <td th:text="${produitFind.nutriment.vitaminC100G} + ' ' + ${produitFind.nutriment.vitaminCUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>VATIMINE D</td>
+                                <td th:text="${produitFind.nutriment.vitaminD100G} + ' ' + ${produitFind.nutriment.vitaminDUnit}"></td>
+                            </tr>
+                            <tr>
+                                <td>VATIMINE D</td>
+                                <td th:text="${produitFind.nutriment.vitaminD100G} + ' ' + ${produitFind.nutriment.vitaminDUnit}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <span th:insert="common/footer.html"></span>
+</body>
+</html>
