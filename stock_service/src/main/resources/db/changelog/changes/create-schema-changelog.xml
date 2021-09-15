@@ -168,5 +168,27 @@
         
     </changeSet>
     
+    <changeSet author="nicolasdotnet" id="11">
+        
+        <addColumn tableName="produit" >		
+            <column name="user_id" type="VARCHAR(500)">
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
+    <changeSet author="nicolasdotnet" id="12">
+              
+        <dropColumn tableName="produit_details">
+            <column name="in_stock"></column>
+        </dropColumn>
+        <addColumn tableName="produit_details" >		
+            <column name="in_stock" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        
+    </changeSet>
+    
     
 </databaseChangeLog>

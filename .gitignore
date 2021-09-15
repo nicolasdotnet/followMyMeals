@@ -58,3 +58,8 @@ config_service/nbactions.xml
 register_service/nbactions.xml
 stock_service/nbactions.xml
 /stock_service/nbproject/
+/stock_service - Copie/nbproject/
+/stock_service - Copie/stock_service/nbproject/
+/sav_stock_service - Copie/nbproject/
+/sav_stock_service - Copie/stock_service/nbproject/
+/meal_service/nbproject/

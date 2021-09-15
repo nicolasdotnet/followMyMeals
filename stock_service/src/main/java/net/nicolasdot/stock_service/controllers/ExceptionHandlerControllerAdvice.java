@@ -9,6 +9,7 @@ import net.nicolasdot.stock_service.entity.ExceptionMessage;
 import net.nicolasdot.stock_service.exceptions.NotPossibleException;
 import net.nicolasdot.stock_service.exceptions.EntityAlreadyExistsException;
 import net.nicolasdot.stock_service.exceptions.EntityNotFoundException;
+import net.nicolasdot.stock_service.exceptions.StockServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,8 +26,6 @@ public class ExceptionHandlerControllerAdvice {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    //TODO
-    // null dans request.getQueryString() 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionMessage> handleEntityNoFoudException(HttpServletRequest request, EntityNotFoundException e) {
 
@@ -66,6 +65,19 @@ public class ExceptionHandlerControllerAdvice {
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(StockServiceException.class)
+    public ResponseEntity<ExceptionMessage> handleBookingNotPossibleException(HttpServletRequest request, StockServiceException e) {
+
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionMessage> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
 
@@ -86,6 +98,19 @@ public class ExceptionHandlerControllerAdvice {
                 .build();
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionMessage> handleException(HttpServletRequest request, Exception e) {
+
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

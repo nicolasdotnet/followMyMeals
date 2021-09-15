@@ -9,9 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 /**
  *
- * @author nicolasdotnet
-
- This class is used to search Produit specifying the criteria
+ * @author nicolasdotnet This class is used to search Produit specifying the
+ * criteria
  *
  */
 public class ProduitSpecification implements Specification<Produit> {
@@ -33,15 +32,22 @@ public class ProduitSpecification implements Specification<Produit> {
             String param = "%" + filter.getProduitName() + "%";
 
             predicate.getExpressions().add(criteriaBuilder.like(root.get("produitName"), param));
-            
-            System.out.println("CCCCCCCCCCCCCCCCCCCCC produitName : " + filter.getProduitName());
         }
 
         if (filter.getCode() != null) {
+            
             predicate.getExpressions().add(criteriaBuilder.equal(root.get("code"), filter.getCode()));
 
-            System.out.println("CCCCCCCCCCCCCCCCCCCCC code : " + filter.getCode());
+        }
 
+        if (filter.getUserId() != null) {
+            
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("userId"), filter.getUserId()));
+        }
+
+        if (filter.getInStock() != null) {
+
+            predicate.getExpressions().add(criteriaBuilder.equal(root.join("produitDetails").get("inStock"), filter.getInStock()));
         }
 
         return criteriaBuilder.and(predicate);

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
-import net.nicolasdot.stock_service.dto.ProduitDetailsDTO;
+import net.nicolasdot.stock_service.dto.ProduitDTO;
 import net.nicolasdot.stock_service.entity.Produit;
 import net.nicolasdot.stock_service.exceptions.EntityNotFoundException;
 import net.nicolasdot.stock_service.exceptions.NotPossibleException;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import net.nicolasdot.stock_service.services.interfaces.IProduitService;
+import org.springframework.http.HttpStatus;
 
 /**
  *
@@ -41,12 +42,12 @@ public class ProduitController {
         @ApiResponse(code = 404, message = "le produit n'existe pas dans la base"),
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/user/produits/{code}/consult")
-    public ResponseEntity<Produit> showProduit(@PathVariable("code") String code) throws EntityNotFoundException {
+    @GetMapping("/api/user/product")
+    public ResponseEntity<Produit> showProduct(@RequestParam(name = "code")String code, @RequestParam(name = "user") String userId) throws EntityNotFoundException {
 
 //        log.debug("showProduct() code: {}", code);
-        Produit produit = iProduitService.consultProduitByCode(code);
-        
+        Produit produit = iProduitService.consultProduitByCode(code, userId);
+
         return ResponseEntity.ok(produit);
 
     }
@@ -64,7 +65,9 @@ public class ProduitController {
 //        log.debug("showProduct() code: {}", code);
         Produit produit = iProduitService.getProduitById(Long.valueOf(id));
         
-        return ResponseEntity.ok(produit);
+        return new ResponseEntity<>(produit, HttpStatus.FOUND);
+
+       //return ResponseEntity.ok(produit);
 
     }
 
@@ -83,19 +86,17 @@ public class ProduitController {
 
     }
 
-    @ApiOperation("Sauvegarder un produit dans le stock")
+    @ApiOperation("Ajouter un produit dans le stock")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = Produit.class),
         @ApiResponse(code = 403, message = "vous ne disposez pas des droits pour accéder à la ressource"),
-        @ApiResponse(code = 404, message = "le produit n'existe pas dans la base"),
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @PutMapping("/api/user/produits")
-    public ResponseEntity<Produit> saveProduit(@Valid @RequestBody ProduitDetailsDTO produitDetailsDTO) throws EntityNotFoundException, NotPossibleException {
+    public ResponseEntity<Produit> saveProduit(@Valid @RequestBody ProduitDTO produitDTO) throws EntityNotFoundException, NotPossibleException {
 
 //        log.debug("showProduct() code: {}", code);
-
-        Produit produit = iProduitService.saveProduit(Long.valueOf(produitDetailsDTO.getId()), produitDetailsDTO.getQuantity());
+        Produit produit = iProduitService.saveProduit(Long.valueOf(produitDTO.getProduitId()), produitDTO.getUserId());
 
         return ResponseEntity.ok(produit);
 
@@ -112,17 +113,19 @@ public class ProduitController {
     public ResponseEntity<Page<Produit>> showAllProduitsByCriteria(
             @RequestParam(name = "code", defaultValue = "") String code,
             @RequestParam(name = "produit", defaultValue = "") String produit,
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "5") int size) {
+            @RequestParam(name = "stock", defaultValue = "") String inStock,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "4") int size,
+            @RequestParam(name = "user") String userId) {
 
         //log.debug("showAllProductsByCriteria");
         ProduitCriteria productCriteria = new ProduitCriteria();
         productCriteria.setCode(code);
         productCriteria.setProduitName(produit);
-        
+        productCriteria.setInStock(inStock);
+        productCriteria.setUserId(userId);
+
         Page<Produit> pageProduit = iProduitService.getAllProduitsByCriteria(productCriteria, page, size);
-        
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> showAllProduitsByCriteria() EMPTY ? "+ pageProduit.isEmpty());
 
         return ResponseEntity.ok().body(pageProduit);
     }
@@ -134,7 +137,7 @@ public class ProduitController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/produits/update")
-    public ResponseEntity getUpdateProduit() throws EntityNotFoundException{
+    public ResponseEntity getUpdateAllProduits() throws EntityNotFoundException {
 
         //log.debug("getUpdateProduct dateToday: {}", dateValidate);
         List<Produit> produits = iProduitService.ManagementUpdateProduits();

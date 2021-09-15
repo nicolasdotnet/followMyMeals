@@ -43,7 +43,7 @@ public class ProduitDetails implements Serializable {
     private String weightUnit;
 
     @Column(name = "in_stock", nullable = false)
-    private Boolean inStock;
+    private String inStock;
 
     @OneToOne(mappedBy = "produitDetails")
     @JsonIgnore

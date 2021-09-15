@@ -14,4 +14,8 @@ public class ProduitCriteria {
     private String code;
 
     private String produitName;
+    
+    private String inStock;
+    
+    private String userId;
 }

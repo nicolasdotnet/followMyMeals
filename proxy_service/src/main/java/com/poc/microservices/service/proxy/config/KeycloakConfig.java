@@ -1,4 +1,4 @@
-package net.nicolasdot.stock_service.configurations;
+package com.poc.microservices.service.proxy.config;
 
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.context.annotation.Bean;

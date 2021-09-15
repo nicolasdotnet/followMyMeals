@@ -104,7 +104,7 @@
         </dependency>
         
         <!-- Security -->
-        <dependency>
+         <!-- <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-spring-boot-starter</artifactId>
             <version>8.0.1</version>
@@ -114,7 +114,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
             <version>2.5.1</version>
             <type>module</type>
-        </dependency>
+        </dependency> -->
     </dependencies>
     <dependencyManagement>
         <dependencies>

@@ -1,4 +1,4 @@
-package net.nicolasdot.stock_service.configurations;
+package com.poc.microservices.service.proxy.config;
 
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;

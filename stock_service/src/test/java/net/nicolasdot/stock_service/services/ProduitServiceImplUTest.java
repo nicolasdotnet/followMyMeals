@@ -8,6 +8,7 @@ import net.nicolasdot.stock_service.dao.IProduitRepository;
 import net.nicolasdot.stock_service.entity.Nutriment;
 import net.nicolasdot.stock_service.entity.Produit;
 import net.nicolasdot.stock_service.entity.ProduitDetails;
+import net.nicolasdot.stock_service.entity.StockStatus;
 import net.nicolasdot.stock_service.exceptions.EntityNotFoundException;
 import net.nicolasdot.stock_service.exceptions.NotPossibleException;
 import net.nicolasdot.stock_service.tools.Proxy;
@@ -67,18 +68,19 @@ public class ProduitServiceImplUTest {
     public void testConsultProductByCodeWhenTheProduitIsAlreadyExist() throws Exception {
         System.out.println("testConsultProductByCodeWhenTheProduitIsAlreadyExist");
         String code = "000";
+        String userId = "00";
 
         Produit expResult = new Produit();
         expResult.setCode(code);
 
         Optional<Produit> op = Optional.of(expResult);
 
-        when(iProduitRepository.findByCode(code)).thenReturn(op);
+        when(iProduitRepository.findByCodeAndUserId(code, userId)).thenReturn(op);
 
-        Produit result = instance.consultProduitByCode(code);
+        Produit result = instance.consultProduitByCode(code, userId);
         assertEquals(expResult.getCode(), result.getCode());
 
-        verify(iProduitRepository).findByCode(code);
+        verify(iProduitRepository).findByCodeAndUserId(code, userId);
 
     }
 
@@ -89,30 +91,28 @@ public class ProduitServiceImplUTest {
     public void testConsultProductByCodeWhenTheProduitDoesNotExit() throws Exception {
         System.out.println("testConsultProductByCodeWhenTheProduitDoesNotExit");
         String code = "000";
+        String userId = "00";
 
         Produit expResult = new Produit();
         expResult.setCode(code);
         Optional<Produit> op = Optional.empty();
-        when(iProduitRepository.findByCode(code)).thenReturn(op);
+        when(iProduitRepository.findByCodeAndUserId(code, userId)).thenReturn(op);
 
         Optional<Product> opProduct = Optional.empty();
-        //MockedStatic<Proxy> proxyMock = Mockito.mockStatic(Proxy.class);
         proxyMock.when(() -> getOpenfoodFact(code)).thenReturn(opProduct);
 
         try {
 
-            instance.consultProduitByCode(code);
+            instance.consultProduitByCode(code, userId);
 
         } catch (Exception e) {
 
             assertTrue(e instanceof EntityNotFoundException);
             assertEquals(e.getMessage(), "Le produit n'existe pas !");
-            verify(iProduitRepository).findByCode(code);
+            verify(iProduitRepository).findByCodeAndUserId(code, userId);
             proxyMock.verify(() -> getOpenfoodFact(code));
 
         }
-
-        //proxyMock.close();
     }
 
     /**
@@ -122,9 +122,10 @@ public class ProduitServiceImplUTest {
     public void testConsultProductByCodeWhenCodeIsGood() throws Exception {
         System.out.println("testConsultProductByCodeWhenCodeIsGood");
         String code = "000";
+        String userId = "00";
 
         Optional<Produit> op = Optional.empty();
-        when(iProduitRepository.findByCode(code)).thenReturn(op);
+        when(iProduitRepository.findByCodeAndUserId(code, userId)).thenReturn(op);
 
         SelectedImages selectedImages = new SelectedImages();
         SelectedImage selectedImage = new SelectedImage();
@@ -183,18 +184,19 @@ public class ProduitServiceImplUTest {
 
         ProduitDetails produitDetails = new ProduitDetails();
         produitDetails.setDate(LocalDate.now());
-        produitDetails.setInStock(Boolean.FALSE);
+        produitDetails.setInStock(StockStatus.FALSE.getValue());
 
         Produit expResult = new Produit();
         expResult.setCode(code);
+        expResult.setUserId(userId);
         expResult.setProduitDetails(produitDetails);
 
         when(iProduitRepository.save(any())).thenReturn(expResult);
 
-        Produit result = instance.consultProduitByCode(code);
+        Produit result = instance.consultProduitByCode(code, userId);
         assertEquals(expResult.getCode(), result.getCode());
 
-        verify(iProduitRepository).findByCode(code);
+        verify(iProduitRepository).findByCodeAndUserId(code, userId);
         proxyMock.verify(() -> getOpenfoodFact(code));
 
     }
@@ -300,12 +302,13 @@ public class ProduitServiceImplUTest {
                 () -> {
 
                     Long id = 99L;
+                    String userId = "000-00";
 
                     Optional<Produit> op = Optional.empty();
 
-                    when(iProduitRepository.findById(id)).thenReturn(op);
+                    when(iProduitRepository.findByIdAndUserId(any(), any())).thenReturn(op);
 
-                    instance.saveProduit(id, 0);
+                    instance.saveProduit(id, userId);
                 });
 
         String expectedMessage = "Le produit n'a pas était scanné !";
@@ -318,103 +321,14 @@ public class ProduitServiceImplUTest {
      * Test of saveProduit method, of class ProduitServiceImpl.
      */
     @Test
-    public void testSaveProduitWhenQuantityIsNegative() throws NotPossibleException {
-        System.out.println("testSaveProduitWhenQuantityIsNegative");
-
-        Exception exception = assertThrows(NotPossibleException.class,
-                () -> {
-
-                    Long id = 99L;
-                    int quantity = -10;
-
-                    Produit produit = new Produit();
-                    Optional<Produit> op = Optional.of(produit);
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.saveProduit(id, quantity);
-                });
-
-        String expectedMessage = "Il n'y a pas de quantité";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-
-    }
-
-    /**
-     * Test of saveProduit method, of class ProduitServiceImpl.
-     */
-    @Test
-    public void testSaveProduitWhenQuantityIsZero() throws NotPossibleException {
-        System.out.println("testSaveProduitWhenQuantityIsZero");
-
-        Exception exception = assertThrows(NotPossibleException.class,
-                () -> {
-
-                    Long id = 99L;
-                    int quantity = 0;
-
-                    Produit produit = new Produit();
-                    Optional<Produit> op = Optional.of(produit);
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.saveProduit(id, quantity);
-                });
-
-        String expectedMessage = "Il n'y a pas de quantité";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-
-    }
-
-    /**
-     * Test of saveProduit method, of class ProduitServiceImpl.
-     */
-    @Test
-    public void testSaveProduitWhenStockIsTrue() throws Exception {
-        System.out.println("testSaveProduitWHenStockIsTrue");
-
-        Exception exception = assertThrows(NotPossibleException.class,
-                () -> {
-
-                    Long id = 99L;
-                    int quantity = 10;
-
-                    ProduitDetails produitDetails = new ProduitDetails();
-                    produitDetails.setInStock(Boolean.TRUE);
-
-                    Produit produit = new Produit();
-                    produit.setProduitDetails(produitDetails);
-                    Optional<Produit> op = Optional.of(produit);
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.saveProduit(id, quantity);
-                });
-
-        String expectedMessage = "Le produit est déjà dans le stock";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-
-    }
-
-    /**
-     * Test of saveProduit method, of class ProduitServiceImpl.
-     */
-    @Test
-    public void testSaveProduitStockFalseAndQuantityPositive() throws Exception {
-        System.out.println("testSaveProduitStockFalseAndQuantityPositif");
-
+    public void testSaveProduitWhenStockIsFalse() throws EntityNotFoundException, NotPossibleException {
+        System.out.println("testSaveProduitWhenStockIsFalse");
+        
         Long id = 99L;
-        int quantity = 10;
+        String userId = "000-00";
 
         ProduitDetails produitDetails = new ProduitDetails();
-        produitDetails.setInStock(Boolean.FALSE);
-        produitDetails.setQuantity(0);
+        produitDetails.setInStock(StockStatus.FALSE.getValue());
         produitDetails.setWeight(0);
         produitDetails.setWeightUnit("unit");
         produitDetails.setRemainingQuantity(0);
@@ -424,11 +338,10 @@ public class ProduitServiceImplUTest {
         produit.setProduitDetails(produitDetails);
         Optional<Produit> op = Optional.of(produit);
 
-        when(iProduitRepository.findById(id)).thenReturn(op);
+        when(iProduitRepository.findByIdAndUserId(any(), any())).thenReturn(op);
 
         ProduitDetails expResultDetails = new ProduitDetails();
-        expResultDetails.setInStock(Boolean.TRUE);
-        expResultDetails.setQuantity(10);
+        expResultDetails.setInStock(StockStatus.TRUE.getValue());
         expResultDetails.setWeight(0);
         expResultDetails.setWeightUnit("unit");
         expResultDetails.setRemainingQuantity(0);
@@ -438,10 +351,39 @@ public class ProduitServiceImplUTest {
 
         when(iProduitRepository.saveAndFlush(any())).thenReturn(expResult);
 
-        Produit result = instance.saveProduit(id, quantity);
-        assertEquals(expResult.getProduitDetails().getQuantity(), result.getProduitDetails().getQuantity());
-        verify(iProduitRepository).findById(id);
+        Produit result = instance.saveProduit(id, userId);
+        assertEquals(expResult.getProduitDetails().getInStock(), result.getProduitDetails().getInStock());
+        verify(iProduitRepository).findByIdAndUserId(any(), any());
+    }
 
+    /**
+     * Test of saveProduit method, of class ProduitServiceImpl.
+     */
+    @Test
+    public void testSaveProduitWhenStockIsTrue() throws EntityNotFoundException, NotPossibleException {
+        System.out.println("testSaveProduitWhenStockIsTrue");
+        
+        Long id = 99L;
+        String userId = "000-00";
+
+        ProduitDetails produitDetails = new ProduitDetails();
+        produitDetails.setInStock(StockStatus.TRUE.getValue());
+        produitDetails.setWeight(0);
+        produitDetails.setWeightUnit("unit");
+        produitDetails.setRemainingQuantity(0);
+
+        Produit produit = new Produit();
+        produit.setWeight("200g");
+        produit.setProduitDetails(produitDetails);
+        Optional<Produit> op = Optional.of(produit);
+
+        when(iProduitRepository.findByIdAndUserId(any(), any())).thenReturn(op);
+
+        when(iProduitRepository.saveAndFlush(any())).thenReturn(produit);
+
+        Produit result = instance.saveProduit(id, userId);
+        assertEquals(produit.getProduitDetails().getInStock(), result.getProduitDetails().getInStock());
+        verify(iProduitRepository).findByIdAndUserId(any(), any());
     }
 
     /**
@@ -545,178 +487,4 @@ public class ProduitServiceImplUTest {
         proxyMock.verify(() -> getOpenfoodFact(any()));
 
     }
-
-    @Test
-    public void testExtractQuantityWhenQuantityAndUnit() {
-
-        int quantity = 2;
-
-        String quantityP = "444g";
-
-        float result = instance.extractQuatity(quantityP);
-
-        assertEquals(444.00, result);
-    }
-
-    @Test
-    public void testExtractQuantityWhenQuantityAndIntervalAndUnit() {
-
-        String quantityP = "444 g";
-
-        float result = instance.extractQuatity(quantityP);
-
-        assertEquals(444.00, result);
-    }
-
-    @Test
-    public void testExtractUnitWhenQuantityAndIntervalAndUnit() {
-
-        String quantityP = "444 g";
-
-        String result = instance.extractUnit(quantityP);
-
-        assertEquals("g", result);
-    }
-
-    @Test
-    public void testExtractUnitWhenQuantityAndUnit() {
-
-        String quantityP = "444g";
-
-        String result = instance.extractUnit(quantityP);
-
-        assertEquals("g", result);
-    }
-
-    @Test
-    public void testUpdateQuantityProduitWhenTheProduitDoesNotExit() {
-
-        System.out.println("testUpdateQuantityProduitWhenTheProduitDoesNotExit");
-
-        Exception exception = assertThrows(EntityNotFoundException.class,
-                () -> {
-
-                    Long id = 99L;
-
-                    Optional<Produit> op = Optional.empty();
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.updateQuantityProduit(id, 0);
-                });
-
-        String expectedMessage = "Le produit n'a pas était scanné !";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testUpdateQuantityProduitWhenQuantityIsZero() {
-
-        System.out.println("testUpdateQuantityProduitWhenQuantityIsZero");
-
-        Exception exception = assertThrows(NotPossibleException.class,
-                () -> {
-
-                    Long id = 99L;
-
-                    Optional<Produit> op = Optional.of(new Produit());
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.updateQuantityProduit(id, 0);
-                });
-
-        String expectedMessage = "Il n'y a pas de quantité";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testUpdateQuantityProduitWhenQuantityIsNegative() {
-
-        System.out.println("testUpdateQuantityProduitWhenQuantityIsNegative");
-
-        Exception exception = assertThrows(NotPossibleException.class,
-                () -> {
-
-                    Long id = 99L;
-
-                    Optional<Produit> op = Optional.of(new Produit());
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.updateQuantityProduit(id, -1);
-                });
-
-        String expectedMessage = "Il n'y a pas de quantité";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testUpdateQuantityProduitWhenTheProduitDoesNotExitInTheStock() {
-
-        System.out.println("testUpdateQuantityProduitWhenTheProduitDoesNotExitInTheStock");
-
-        Exception exception = assertThrows(NotPossibleException.class,
-                () -> {
-
-                    Long id = 99L;
-
-                    ProduitDetails produitDetails = new ProduitDetails();
-                    produitDetails.setInStock(Boolean.FALSE);
-
-                    Produit produit = new Produit();
-                    produit.setProduitDetails(produitDetails);
-
-                    Optional<Produit> op = Optional.of(produit);
-
-                    when(iProduitRepository.findById(id)).thenReturn(op);
-
-                    instance.updateQuantityProduit(id, 1);
-                });
-
-        String expectedMessage = "Le produit n'est pas dans le stock";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testUpdateQuantityProduitWhenQuantityISPositive() throws EntityNotFoundException, NotPossibleException {
-
-        System.out.println("testUpdateQuantityProduitWhenQuantityISPositive");
-
-        Long id = 99L;
-
-        ProduitDetails produitDetails = new ProduitDetails();
-        produitDetails.setInStock(Boolean.TRUE);
-        produitDetails.setQuantity(5);
-
-        Produit produit = new Produit();
-        produit.setProduitDetails(produitDetails);
-
-        Optional<Produit> op = Optional.of(produit);
-
-        when(iProduitRepository.findById(id)).thenReturn(op);
-
-        ProduitDetails expResultDetails = new ProduitDetails();
-        expResultDetails.setInStock(Boolean.TRUE);
-        expResultDetails.setQuantity(1);
-
-        Produit expResult = new Produit();
-        expResult.setProduitDetails(expResultDetails);
-
-        when(iProduitRepository.saveAndFlush(any())).thenReturn(expResult);
-
-        Produit result = instance.updateQuantityProduit(id, 1);
-
-        assertEquals(expResult.getProduitDetails().getQuantity(), result.getProduitDetails().getQuantity());
-        verify(iProduitRepository).findById(id);
-    }
-
 }

@@ -17,10 +17,11 @@ public interface IProduitService {
      * method to fetch a produit by code
      *
      * @param code
+     * @param userId
      * @return produit object saved
      * @throws net.nicolasdot.stock_service.exceptions.EntityNotFoundException
      */
-    Produit consultProduitByCode(String code) throws EntityNotFoundException;
+    Produit consultProduitByCode(String code, String userId) throws EntityNotFoundException;
 
     /**
      * method to get a produit by id
@@ -40,26 +41,15 @@ public interface IProduitService {
     void deleteProduit(Long id) throws EntityNotFoundException;
 
     /**
-     * method to save a produit quatity
+     * method to save a produit in the stock
      *
-     * @param id
-     * @param quantity
-     * @return produit object update
+     * @param produitId
+     * @param userId
+     * @return produit object save in the stock
      * @throws net.nicolasdot.stock_service.exceptions.EntityNotFoundException
      * @throws net.nicolasdot.stock_service.exceptions.NotPossibleException
      */
-    Produit saveProduit(Long id, int quantity) throws EntityNotFoundException, NotPossibleException;
-
-    /**
-     * method to update a produit quatity
-     *
-     * @param id
-     * @param quantity
-     * @return produit object update
-     * @throws net.nicolasdot.stock_service.exceptions.EntityNotFoundException
-     * @throws net.nicolasdot.stock_service.exceptions.NotPossibleException
-     */
-    Produit updateQuantityProduit(Long id, int quantity) throws EntityNotFoundException, NotPossibleException;
+    Produit saveProduit(Long produitId, String userId) throws EntityNotFoundException, NotPossibleException;
 
     /**
      * method to get all produits by criteria
@@ -70,7 +60,7 @@ public interface IProduitService {
      * @return the pages produits
      */
     Page<Produit> getAllProduitsByCriteria(ProduitCriteria produitCriteria, int page, int size);
-
+    
     /**
      * method to call update (from OpenFoodsFact) the produits
      *

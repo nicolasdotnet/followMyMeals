@@ -14,9 +14,11 @@ import org.springframework.data.repository.query.Param;
  */
 public interface IProduitRepository extends JpaRepository<Produit, Long>, JpaSpecificationExecutor<Produit> {
 
-    Optional<Produit> findByCode(String code);
-
     @Query(value = "SELECT p FROM Produit p WHERE p.produitDetails.inStock = :inStock")
     List<Produit> findAllByInStock(@Param("inStock")Boolean inStock);
 
+    Optional<Produit> findByIdAndUserId(Long produitId, String userId);
+
+    Optional<Produit> findByCodeAndUserId(String code, String userId);
+    
 }

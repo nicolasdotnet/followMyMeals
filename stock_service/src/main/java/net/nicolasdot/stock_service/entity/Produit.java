@@ -59,6 +59,9 @@ public class Produit implements Serializable {
     @JoinColumn(name = "nutriment_id", referencedColumnName = "id")
     private Nutriment nutriment;
 
+    @Column(name = "user_id")
+    private String userId;
+
     @Override
     public String toString() {
         return "Produit{"

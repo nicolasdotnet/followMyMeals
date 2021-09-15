@@ -2,7 +2,6 @@ package net.nicolasdot.stock_service.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -18,9 +17,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import net.nicolasdot.stock_service.dao.IProduitRepository;
 import net.nicolasdot.stock_service.entity.Nutriment;
+import net.nicolasdot.stock_service.entity.StockStatus;
 import net.nicolasdot.stock_service.exceptions.NotPossibleException;
 import pl.coderion.model.Product;
 import net.nicolasdot.stock_service.services.interfaces.IProduitService;
+import org.springframework.data.domain.Sort;
 import pl.coderion.model.Nutriments;
 
 /**
@@ -37,9 +38,9 @@ public class ProduitServiceImpl implements IProduitService {
     //TODO
     //  private static final Logger log = LogManager.getLogger(ProduitServiceImpl.class);
     @Override
-    public Produit consultProduitByCode(String code) throws EntityNotFoundException {
+    public Produit consultProduitByCode(String code, String userId) throws EntityNotFoundException {
 
-        Optional<Produit> produitFind = iProduitRepository.findByCode(code);
+        Optional<Produit> produitFind = iProduitRepository.findByCodeAndUserId(code, userId);
 
         if (produitFind.isPresent()) {
 
@@ -56,6 +57,7 @@ public class ProduitServiceImpl implements IProduitService {
         }
 
         Produit produit = new Produit();
+        produit.setUserId(userId);
         produit.setCode(productOptional.get().getCode());
         produit.setBrand(productOptional.get().getBrands());
         produit.setProduitName(productOptional.get().getProductName());
@@ -66,15 +68,15 @@ public class ProduitServiceImpl implements IProduitService {
 
         ProduitDetails produitDetails = new ProduitDetails();
         produitDetails.setDate(LocalDate.now());
-        produitDetails.setInStock(Boolean.FALSE);
+        produitDetails.setInStock(StockStatus.FALSE.getValue());
         produit.setWeight(productOptional.get().getQuantity());
 
         Nutriment nutriment = new Nutriment();
         Nutriments ns = productOptional.get().getNutriments();
         nutriment.setCarbohydrates100G(ns.getCarbohydrates100G());
         nutriment.setCarbohydratesUnit(ns.getCarbohydratesUnit());
-        nutriment.setEnergy100G(ns.getEnergy100G());
-        nutriment.setEnergyKjUnit(ns.getEnergyKjUnit());
+        nutriment.setEnergy100G(ns.getEnergyKcal100G());
+        nutriment.setEnergyKjUnit(ns.getEnergyKcalUnit());
         nutriment.setFat100G(ns.getFat100G());
         nutriment.setFatUnit(ns.getFatUnit());
         nutriment.setFiber100G(ns.getFiber100G());
@@ -136,69 +138,28 @@ public class ProduitServiceImpl implements IProduitService {
     }
 
     @Override
-    public Produit saveProduit(Long id, int quantity) throws EntityNotFoundException, NotPossibleException {
+    public Produit saveProduit(Long produitId, String userId) throws EntityNotFoundException, NotPossibleException {
 
-        Optional<Produit> produitFind = iProduitRepository.findById(id);
-
-        if (produitFind.isEmpty()) {
-
-            throw new EntityNotFoundException("Le produit n'a pas était scanné !");
-        }
-
-        if (quantity <= 0) {
-
-            throw new NotPossibleException("Il n'y a pas de quantité");
-        }
-
-        switch (produitFind.get().getProduitDetails().getInStock().toString()) {
-
-            case "true":
-
-                throw new NotPossibleException("Le produit est déjà dans le stock");
-
-            default:
-
-//                float weight = this.extractQuatity(produitFind.get().getWeight());
-//                String weightUnit = this.extractUnit(produitFind.get().getWeight());
-
-                produitFind.get().getProduitDetails().setInStock(Boolean.TRUE);
-                produitFind.get().getProduitDetails().setQuantity(quantity);
-//                produitFind.get().getProduitDetails().setWeight(weight);
-//                produitFind.get().getProduitDetails().setWeightUnit(weightUnit);
-//                produitFind.get().getProduitDetails().setRemainingQuantity((float) quantity * weight);
-
-                return iProduitRepository.saveAndFlush(produitFind.get());
-
-        }
-
-    }
-
-    @Override
-    public Produit updateQuantityProduit(Long id, int quantity) throws EntityNotFoundException, NotPossibleException {
-
-        Optional<Produit> produitFind = iProduitRepository.findById(id);
+        Optional<Produit> produitFind = iProduitRepository.findByIdAndUserId(produitId, userId);
 
         if (produitFind.isEmpty()) {
 
             throw new EntityNotFoundException("Le produit n'a pas était scanné !");
         }
 
-        if (quantity <= 0) {
+        switch (produitFind.get().getProduitDetails().getInStock()) {
 
-            throw new NotPossibleException("Il n'y a pas de quantité");
-        }
+            case "TRUE":
 
-        switch (produitFind.get().getProduitDetails().getInStock().toString()) {
-
-            case "true":
-
-                produitFind.get().getProduitDetails().setQuantity(quantity);
-
+                produitFind.get().getProduitDetails().setInStock(StockStatus.FALSE.getValue());
+                
                 return iProduitRepository.saveAndFlush(produitFind.get());
 
             default:
 
-                throw new NotPossibleException("Le produit n'est pas dans le stock");
+                produitFind.get().getProduitDetails().setInStock(StockStatus.TRUE.getValue());
+
+                return iProduitRepository.saveAndFlush(produitFind.get());
 
         }
 
@@ -209,15 +170,10 @@ public class ProduitServiceImpl implements IProduitService {
 
         produitCriteria.setProduitName("".equals(produitCriteria.getProduitName()) ? null : produitCriteria.getProduitName());
         produitCriteria.setCode("".equals(produitCriteria.getCode()) ? null : produitCriteria.getCode());
-
-        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB code : " + produitCriteria.getCode());
-        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB produitName : " + produitCriteria.getProduitName());
-
+        produitCriteria.setInStock("".equals(produitCriteria.getInStock()) ? null : produitCriteria.getInStock());
         ProduitSpecification produitSpecification = new ProduitSpecification(produitCriteria);
-        
-        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB produitSpecification : " +  produitSpecification.toString());
 
-        return iProduitRepository.findAll(produitSpecification, PageRequest.of(page, size));
+        return iProduitRepository.findAll(produitSpecification, PageRequest.of(page, size, Sort.Direction.DESC, "id"));
     }
 
     @Override
@@ -284,31 +240,6 @@ public class ProduitServiceImpl implements IProduitService {
 
         }
         return produitUpdate;
-
-    }
-
-    public float extractQuatity(String quantityP) {
-
-        // Remplacer chaque nombre non numérique par un espace
-        quantityP = quantityP.replaceAll("[^\\d]", " ");
-        // Supprimer les espaces de début et de fin 
-        quantityP = quantityP.trim();
-        // Remplacez les espaces consécutifs par un seul espace
-        quantityP = quantityP.replaceAll(" +", " ");
-
-        return Float.parseFloat(quantityP);
-
-    }
-
-    public String extractUnit(String quantityP) {
-
-        quantityP = quantityP.replaceAll("[^a-z]", " ");
-        // Supprimer les espaces de début et de fin 
-        quantityP = quantityP.trim();
-        // Remplacez les espaces consécutifs par un seul espace
-        quantityP = quantityP.replaceAll(" +", " ");
-
-        return quantityP;
 
     }
 
