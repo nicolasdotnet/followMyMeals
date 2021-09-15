@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="block" id="presentation" sec:authorize="isAnonymous()">
+            <div class="container">
+                <h2>Bienvenue sur votre FmyMeals</h2>
+                <br>
+                <p>Connectez vous à votre compte...</p>
+            </div>
+        </div>
+
+        <div sec:authorize="isAuthenticated()">
+
+            <div class="container mt-3">
+                <nav aria-label="breadcrumb" class="b">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a href="/">Acceuil</a></li>
+                    </ol>
+                </nav>
+                <div class="row container">
+                    <span th:text="${error}"></span>
+                </div>
+                
+                <h1 th:text="'Bonjour '+${username}+' !'"></h1>
+                
+                <h1 class="py-5">- Scanner un produit</h1>
+                <div class="table-responsive mt-1">
+                    <div class="form-group">
+                        <form action="/user/product">
+                            <input type="text" name="code" placeholder="Code barre"/>
+
+                            <button class="btn btn-primary" type="submit" name="submit">
+                                <svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <h1 class="py-5">- Ajouter un repas</h1>
+                <div class="table-responsive mt-1">
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit" name="submit">
+
+                            <a href="/user/meal/add"> + + + + </a>
+
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

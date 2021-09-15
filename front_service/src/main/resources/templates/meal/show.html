@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/meals">Les repas</a></li>
+                </ol>
+            </nav>
+
+            <div th:text="${error}"></div>
+            <div th:text="${msg}"></div>
+
+            <h2 th:text="'Repas : '+${mealFind.id}"></h2>
+
+            <div class="row container mt-4 pr-0 pl-0">
+                <div  class="col-sm-8 d-none d-sm-block"><h3></h3></div>
+
+                <div class="col-sm-4 d-none d-sm-block align-self-center">
+                    <form th:action="@{/user/meals/}+${mealFind.id}+@{/consumables/add}">
+                        <button class="btn btn-primary x float-right"
+                                onclick="return confirm('Êtes-vous sûr ?')">Modifier le menu</button>
+                    </form>
+
+                    <form th:action="@{/user/meals/}+${mealFind.id}+@{/validate}">
+                        <button class="btn btn-primary x float-right"
+                                onclick="return confirm('Êtes-vous sûr ?')">Consommer</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div>
+                        <label>Date :</label>
+                        <span th:text="${#dates.format(mealFind.date,'dd MMM yyyy')}"></span> 
+                    </div>
+                    <div>
+                        <label>Type :</label>
+                        <span th:text="${mealFind.mealType.label}"></span>
+                    </div>
+                    <div>
+                        <h5>Compositions :</h5>
+                    </div>
+
+                    <div class="table-responsive mt-1">
+                        <table class="table table-striped">
+                            <tr th:each="p:${consumables}">
+                                <td>
+                                    <span th:text="${p.consumableName} + ' : ' + ${p.quantity}+' g'"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h5>Apport nutrition :</h5>
+                    </div>
+                    <div class="row container mt-4 pr-0 pl-0">
+                        <div  class="col-sm-8 d-none d-sm-block">
+                            <div class="table-responsive mt-1">
+                                <table class="table table-striped" th:if="${mealFind.composition != null}">
+                                    <tr>
+                                        <td>ENERGIE</td>
+                                        <td th:text="${mealFind.composition.energy} + ' ' + ${mealFind.composition.energyKjUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>MATIERES GRASSES</td>
+                                        <td th:text="${mealFind.composition.fat} + ' ' + ${mealFind.composition.fatUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dont acides gras saturés</td>
+                                        <td th:text="${mealFind.composition.saturatedFat} + ' ' + ${mealFind.composition.saturatedFatUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GLUCIDES</td>
+                                        <td th:text="${mealFind.composition.carbohydrates} + ' ' + ${mealFind.composition.carbohydratesUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dont sucres</td>
+                                        <td th:text="${mealFind.composition.sugars} + ' ' + ${mealFind.composition.sugarsUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>PROTEINES</td>
+                                        <td th:text="${mealFind.composition.proteins} + ' ' + ${mealFind.composition.proteinsUnit}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>SEL</td>
+                                        <td th:text="${mealFind.composition.salt} + ' ' + ${mealFind.composition.saltUnit}"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+    <span th:insert="common/footer.html"></span>
+</body>
+</html>

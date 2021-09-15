@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/meals">Les repas</a></li>
+                </ol>
+            </nav>
+            <div class="row container">
+                <span th:text="${error}"></span>
+            </div>
+            <h1>Ajouter un repas</h1>
+            <div class="table-responsive mt-1">
+                <div class="form-group">
+                    <form th:action="@{/user/meal}" th:object="${mealDTO}" method="post" class="col card p-3 mb-5">
+                        <div class="form-group">
+                            <label for="typeId">Type de repas</label>
+                            <select id="typeId" th:field="*{typeId}" required class="form-control">
+                                <option th:each="t:${listMealType}"
+                                        th:value="${t.id}"
+                                        th:text="${t.label}">
+                                </option>
+                            </select>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Ajouter un repas">
+                    </form>
+                </div>
+            </div>
+    </main>
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>
