@@ -63,3 +63,4 @@ stock_service/nbactions.xml
 /sav_stock_service - Copie/nbproject/
 /sav_stock_service - Copie/stock_service/nbproject/
 /meal_service/nbproject/
+*.db
