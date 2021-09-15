@@ -1,0 +1,1 @@
+2021-08-23 09:16:12,985 WARN  [org.keycloak.events] (default task-1) type=LOGIN_ERROR, realmId=followMyMeals, clientId=null, userId=null, ipAddress=127.0.0.1, error=expired_code, restart_after_timeout=true, authSessionParentId=77003791-de5b-4d0b-aa07-41ab0e6148cf, authSessionTabId=oF2HZvrFnUY
