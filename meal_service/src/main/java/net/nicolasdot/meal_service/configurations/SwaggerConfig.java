@@ -31,7 +31,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo(swaggerConfigProperties))
                 .enable(Boolean.valueOf(swaggerConfigProperties.getEnabled()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("net.nicolasdot.journalisation_consommation_service.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("net.nicolasdot.meal_service.controllers"))
                 .paths(PathSelectors.regex("/api.*"))
                 .build();
     }

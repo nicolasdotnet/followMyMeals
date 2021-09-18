@@ -12,6 +12,8 @@ import net.nicolasdot.meal_service.exceptions.EntityNotFoundException;
 import net.nicolasdot.meal_service.exceptions.MealNotPossibleException;
 import net.nicolasdot.meal_service.services.interfaces.IMealService;
 import net.nicolasdot.meal_service.specifications.MealCriteria;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,8 @@ public class MealController {
 
     @Autowired
     private IMealService iMealService;
+    
+    private static final Logger log = LogManager.getLogger(MealController.class);
 
     @ApiOperation("Enregister un nouveau repas")
     @ApiResponses(value = {
@@ -45,7 +49,7 @@ public class MealController {
     @PostMapping("/api/user/meals")
     public ResponseEntity<Meal> saveMeal(@Valid @RequestBody MealDTO mealDto) throws EntityNotFoundException {
 
-        //log.debug("saveMeal()");
+        log.debug("saveMeal()");
         Meal mealSave = iMealService.createMeal(mealDto);
 
         URI location = ServletUriComponentsBuilder
@@ -67,7 +71,7 @@ public class MealController {
     @GetMapping("/api/user/meals/{id}")
     public ResponseEntity showMeal(@PathVariable(value = "id") int id) throws EntityNotFoundException {
 
-        //log.debug("showMeal() id: {}", id);
+        log.debug("showMeal() id: {}", id);
         Meal meal = iMealService.getOneMeal(Long.valueOf(id));
 
         return ResponseEntity.ok(meal);
@@ -83,7 +87,7 @@ public class MealController {
     @PutMapping("/api/user/meals/{id}/validate")
     public ResponseEntity validateMeal(@PathVariable("id") int id) throws EntityNotFoundException, MealNotPossibleException {
 
-        //log.debug("validateMeal() id: {}", id);
+        log.debug("validateMeal() id: {}", id);
         Meal meal = iMealService.validateMeal(Long.valueOf(id));
 
         return ResponseEntity.ok(meal);
@@ -102,7 +106,7 @@ public class MealController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "4") int size) {
 
-        //log.debug("showAllMealsByCriteria");
+        log.debug("showAllMealsByCriteria()");
         MealCriteria mealCriteria = new MealCriteria();
         mealCriteria.setMealId(Long.getLong(userId));
         mealCriteria.setMealtype(mealType);
@@ -123,7 +127,7 @@ public class MealController {
     @DeleteMapping("/api/user/meals/{id}")
     void deleteMeal(@PathVariable("id") int id) throws EntityNotFoundException {
 
-//        log.debug("showProduct() code: {}", code);
+        log.debug("deleteMeal() id: {}", id);
         iMealService.deleteMeal(Long.valueOf(id));
 
     }

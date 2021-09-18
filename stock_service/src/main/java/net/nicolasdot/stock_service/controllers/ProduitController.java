@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import net.nicolasdot.stock_service.services.interfaces.IProduitService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -34,6 +36,8 @@ public class ProduitController {
 
     @Autowired
     IProduitService iProduitService;
+    
+     private static final Logger log = LogManager.getLogger(ProduitController.class);
 
     @ApiOperation("Consulter les informations sur un produit grâce à son code barre")
     @ApiResponses(value = {
@@ -45,7 +49,7 @@ public class ProduitController {
     @GetMapping("/api/user/product")
     public ResponseEntity<Produit> showProduct(@RequestParam(name = "code")String code, @RequestParam(name = "user") String userId) throws EntityNotFoundException {
 
-//        log.debug("showProduct() code: {}", code);
+        log.debug("showProduct() code: {}", code);
         Produit produit = iProduitService.consultProduitByCode(code, userId);
 
         return ResponseEntity.ok(produit);
@@ -62,12 +66,10 @@ public class ProduitController {
     @GetMapping("/api/user/produits/{id}")
     public ResponseEntity<Produit> getProduit(@PathVariable("id") int id) throws EntityNotFoundException {
 
-//        log.debug("showProduct() code: {}", code);
+        log.debug("getProduit id: {}", id);
         Produit produit = iProduitService.getProduitById(Long.valueOf(id));
         
         return new ResponseEntity<>(produit, HttpStatus.FOUND);
-
-       //return ResponseEntity.ok(produit);
 
     }
 
@@ -81,7 +83,7 @@ public class ProduitController {
     @DeleteMapping("/api/user/produits/{id}")
     void deleteProduct(@PathVariable("id") int id) throws EntityNotFoundException {
 
-//        log.debug("showProduct() code: {}", code);
+        log.debug("deleteProduct() id: {}", id);
         iProduitService.deleteProduit(Long.valueOf(id));
 
     }
@@ -95,7 +97,7 @@ public class ProduitController {
     @PutMapping("/api/user/produits")
     public ResponseEntity<Produit> saveProduit(@Valid @RequestBody ProduitDTO produitDTO) throws EntityNotFoundException, NotPossibleException {
 
-//        log.debug("showProduct() code: {}", code);
+        log.debug("showProduct()");
         Produit produit = iProduitService.saveProduit(Long.valueOf(produitDTO.getProduitId()), produitDTO.getUserId());
 
         return ResponseEntity.ok(produit);
@@ -118,7 +120,7 @@ public class ProduitController {
             @RequestParam(name = "size", defaultValue = "4") int size,
             @RequestParam(name = "user") String userId) {
 
-        //log.debug("showAllProductsByCriteria");
+        log.debug("showAllProductsByCriteria");
         ProduitCriteria productCriteria = new ProduitCriteria();
         productCriteria.setCode(code);
         productCriteria.setProduitName(produit);
@@ -139,7 +141,7 @@ public class ProduitController {
     @GetMapping("/api/user/produits/update")
     public ResponseEntity getUpdateAllProduits() throws EntityNotFoundException {
 
-        //log.debug("getUpdateProduct dateToday: {}", dateValidate);
+        log.debug("getUpdateAllProduits()");
         List<Produit> produits = iProduitService.ManagementUpdateProduits();
 
         return ResponseEntity.ok(produits);

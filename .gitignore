@@ -64,3 +64,5 @@ stock_service/nbactions.xml
 /sav_stock_service - Copie/stock_service/nbproject/
 /meal_service/nbproject/
 *.db
+meal_service/logs/logfile.1.log.gz
+stock_service/logs/logfile.1.log.gz

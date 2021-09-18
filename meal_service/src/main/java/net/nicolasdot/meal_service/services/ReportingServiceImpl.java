@@ -12,6 +12,8 @@ import net.nicolasdot.meal_service.entity.Reporting;
 import net.nicolasdot.meal_service.exceptions.ReportingNotPossibleException;
 import net.nicolasdot.meal_service.services.interfaces.IMealService;
 import net.nicolasdot.meal_service.services.interfaces.IReportingService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +31,13 @@ public class ReportingServiceImpl implements IReportingService {
     @Autowired
     IReportingRepository iReportingRepository;
 
+    private static final Logger log = LogManager.getLogger(ReportingServiceImpl.class);
+
     public Reporting reporting(String userId) throws ReportingNotPossibleException {
 
         if ("".equals(userId)) {
 
+            log.error("L'utilisateur n'est pas renseigné !");
             throw new ReportingNotPossibleException("L'utilisateur n'est pas renseigné !");
 
         }
@@ -45,6 +50,7 @@ public class ReportingServiceImpl implements IReportingService {
 
         if (meals.isEmpty()) {
 
+            log.error("Pas de repas consommé sur les 7 derniers jours !");
             throw new ReportingNotPossibleException("Pas de repas consommé sur les 7 derniers jours !");
 
         }

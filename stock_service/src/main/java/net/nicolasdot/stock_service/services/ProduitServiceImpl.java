@@ -21,6 +21,8 @@ import net.nicolasdot.stock_service.entity.StockStatus;
 import net.nicolasdot.stock_service.exceptions.NotPossibleException;
 import pl.coderion.model.Product;
 import net.nicolasdot.stock_service.services.interfaces.IProduitService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Sort;
 import pl.coderion.model.Nutriments;
 
@@ -35,8 +37,8 @@ public class ProduitServiceImpl implements IProduitService {
     @Autowired
     private IProduitRepository iProduitRepository;
 
-    //TODO
-    //  private static final Logger log = LogManager.getLogger(ProduitServiceImpl.class);
+    private static final Logger log = LogManager.getLogger(ProduitServiceImpl.class);
+    
     @Override
     public Produit consultProduitByCode(String code, String userId) throws EntityNotFoundException {
 
@@ -51,7 +53,7 @@ public class ProduitServiceImpl implements IProduitService {
 
         if (productOptional.isEmpty()) {
 
-//            log.error("Le produit ns'existe pas !");
+            log.error("Le produit n'existe pas !");
             throw new EntityNotFoundException("Le produit n'existe pas !");
 
         }
@@ -117,6 +119,7 @@ public class ProduitServiceImpl implements IProduitService {
 
         if (!productFind.isPresent()) {
 
+            log.error("Le produit n'existe pas !");
             throw new EntityNotFoundException("Le produit n'existe pas !");
         }
 
@@ -130,6 +133,7 @@ public class ProduitServiceImpl implements IProduitService {
 
         if (productFind.isEmpty()) {
 
+            log.error("Le produit n'existe pas !");
             throw new EntityNotFoundException("Le produit n'existe pas !");
         }
 
@@ -144,6 +148,7 @@ public class ProduitServiceImpl implements IProduitService {
 
         if (produitFind.isEmpty()) {
 
+            log.error("Le produit n'a pas était scanné !");
             throw new EntityNotFoundException("Le produit n'a pas était scanné !");
         }
 
