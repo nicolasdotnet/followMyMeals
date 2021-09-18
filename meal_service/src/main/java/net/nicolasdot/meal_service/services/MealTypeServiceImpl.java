@@ -8,6 +8,8 @@ import net.nicolasdot.meal_service.dto.MealTypeDTO;
 import net.nicolasdot.meal_service.entity.MealType;
 import net.nicolasdot.meal_service.exceptions.EntityAlreadyExistsException;
 import net.nicolasdot.meal_service.services.interfaces.IMealTypeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class MealTypeServiceImpl implements IMealTypeService {
 
     @Autowired
     IMealTypeRepository iMealTypeRepository;
+    
+    private static final Logger log = LogManager.getLogger(MealServiceImpl.class);
 
     @Override
     public MealType register(MealTypeDTO mealTypeDTO) throws EntityAlreadyExistsException{
@@ -29,7 +33,7 @@ public class MealTypeServiceImpl implements IMealTypeService {
 
         if (mealTypeFind.isPresent()) {
 
-            // log.error("Le type de repas existe déjà !");
+             log.error("Le type de repas existe déjà !");
             throw new EntityAlreadyExistsException("Le type de repas existe déjà !");
 
         }

@@ -11,6 +11,8 @@ import net.nicolasdot.meal_service.dto.MealTypeDTO;
 import net.nicolasdot.meal_service.entity.MealType;
 import net.nicolasdot.meal_service.exceptions.EntityAlreadyExistsException;
 import net.nicolasdot.meal_service.services.interfaces.IMealTypeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,8 @@ public class MealTypeController {
 
     @Autowired
     private IMealTypeService iMealTypeService;
+    
+    private static final Logger log = LogManager.getLogger(MealTypeController.class);
 
     @ApiOperation("Enregister un nouveau type de repas")
     @PostMapping("/api/user/types")
@@ -40,7 +44,7 @@ public class MealTypeController {
     })
     public ResponseEntity saveMealType(@Valid @RequestBody MealTypeDTO mealDto) throws EntityAlreadyExistsException {
 
-        //log.debug("saveBookCategory()");
+        log.debug("saveMealType()");
         MealType mealTypeSave = iMealTypeService.register(mealDto);
 
         URI location = ServletUriComponentsBuilder
@@ -61,7 +65,7 @@ public class MealTypeController {
     @GetMapping("/api/user/types")
     public ResponseEntity showMealTypes() {
 
-        //log.debug("showMeal() id: {}", id);
+        log.debug("showMealTypes()");
         List<MealType> mealTypesFind = iMealTypeService.getAllMealTypes();
 
         return ResponseEntity.ok(mealTypesFind);

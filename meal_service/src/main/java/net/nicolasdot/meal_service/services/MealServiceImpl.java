@@ -20,6 +20,8 @@ import net.nicolasdot.meal_service.services.interfaces.IMealService;
 import net.nicolasdot.meal_service.services.interfaces.IMealTypeService;
 import net.nicolasdot.meal_service.specifications.MealCriteria;
 import net.nicolasdot.meal_service.specifications.MealSpecification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +41,8 @@ public class MealServiceImpl implements IMealService {
 
     @Autowired
     IMealTypeService iMealTypeService;
+    
+    private static final Logger log = LogManager.getLogger(MealServiceImpl.class);
 
     @Override
     public Meal createMeal(MealDTO mealDTO) throws EntityNotFoundException {
@@ -49,7 +53,7 @@ public class MealServiceImpl implements IMealService {
 
         if (mealTypeFind.isEmpty()) {
 
-            //log.error("le type de repas n'existe pas dans la base.");
+            log.error("le type de repas n'existe !.");
             throw new EntityNotFoundException("le type de repas n'existe pas !");
         }
 
@@ -69,14 +73,14 @@ public class MealServiceImpl implements IMealService {
 
         if (mealFind.isEmpty()) {
 
-            //log.error("Le repas n'existe pas !");
+            log.error("Le repas n'existe pas !");
             throw new EntityNotFoundException("Le repas n'existe pas !");
 
         }
 
         if (mealFind.get().getValidate()) {
 
-            //log.error("Le repas n'existe pas !");
+            log.error("Le repas est déjà validé !");
             throw new MealNotPossibleException("Le repas est déjà validé !");
 
         }
@@ -85,6 +89,7 @@ public class MealServiceImpl implements IMealService {
 
         if (consumables.isEmpty()) {
 
+            log.error("Le repas ne contient pas de l'éléments !");
             throw new EntityNotFoundException("Le repas ne contient pas de l'éléments !");
         }
 
@@ -125,6 +130,7 @@ public class MealServiceImpl implements IMealService {
 
         if (!mealFind.isPresent()) {
 
+            log.error("Le repas n'existe pas !");
             throw new EntityNotFoundException("Le repas n'existe pas !");
         }
 
@@ -150,6 +156,7 @@ public class MealServiceImpl implements IMealService {
 
         if (mealFind.isEmpty()) {
 
+            log.error("Le repas n'existe pas !");
             throw new EntityNotFoundException("Le repas n'existe pas !");
         }
 

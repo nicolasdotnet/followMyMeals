@@ -12,24 +12,43 @@ import org.springframework.data.domain.Page;
  * @author nicolasdotnet
  */
 public interface IConsumableService {
-    
-    // Ajouter : userid, un mealid, une liste de  consumableDTO 
-    
-    // algo + test
-    
-    // tester les id & quantity
-    
-    // ajouter un par un les consu : calculer nutriment et persistance
-    
-    Consumable addConsumable(ConsumableDTO consumableDTO) throws EntityNotFoundException, NotPossibleException;    
-    // Retirer : userid, un mealid, une liste de  produitid
 
-    void removeConsumable(Long consumableId)throws EntityNotFoundException, NotPossibleException;
-    
-    // méthode update (consu id , quantity)
+    /**
+     * method to add consumable
+     *
+     * @param consumableDTO
+     * @return consumable object saved
+     * @throws net.nicolasdot.meal_service.exceptions.EntityNotFoundException
+     * @throws net.nicolasdot.meal_service.exceptions.NotPossibleException
+     */
+    Consumable addConsumable(ConsumableDTO consumableDTO) throws EntityNotFoundException, NotPossibleException;
 
-   Page<Consumable> getAllConsumablesByCriteria(ConsumableCriteria consumableCriteria, int page, int size);
+    /**
+     * method method to delete consumable
+     *
+     * @param consumableId
+     * @throws net.nicolasdot.meal_service.exceptions.EntityNotFoundException
+     * @throws net.nicolasdot.meal_service.exceptions.NotPossibleException
+     */
+    void removeConsumable(Long consumableId) throws EntityNotFoundException, NotPossibleException;
 
-   Consumable getConsumableById(Long consumableId) throws EntityNotFoundException;
-    
+    /**
+     * method to get all consumables by criteria
+     *
+     * @param consumableCriteria
+     * @param page
+     * @param size
+     * @return the pages consumables
+     */
+    Page<Consumable> getAllConsumablesByCriteria(ConsumableCriteria consumableCriteria, int page, int size);
+
+    /**
+     * method to get a consumables by id
+     *
+     * @param consumableId
+     * @return consumable object find
+     * @throws net.nicolasdot.meal_service.exceptions.EntityNotFoundException
+     */
+    Consumable getConsumableById(Long consumableId) throws EntityNotFoundException;
+
 }

@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 import net.nicolasdot.meal_service.bean.Produit;
 import net.nicolasdot.meal_service.services.interfaces.IProxyService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -39,6 +41,8 @@ public class ProxyServiceImpl implements IProxyService{
 
     private HttpHeaders headers = new HttpHeaders();
     
+    private static final Logger log = LogManager.getLogger(ProxyServiceImpl.class);
+    
     
     public Optional<Produit> getProduitById(Long produitId) throws RestClientException{
         
@@ -48,7 +52,7 @@ public class ProxyServiceImpl implements IProxyService{
             uri = new URI(baseUrl + serverPort + "/api/user/produits/" + produitId);
         } catch (URISyntaxException ex) {
             
-            // log.error("erreur de endpoint !");
+            log.error("erreur de endpoint !");
         }
 
         headers.setBasicAuth(login, password);
@@ -61,11 +65,11 @@ public class ProxyServiceImpl implements IProxyService{
 
         if (result.hasBody()) {
 
-            //log.info("il n'y a pas de relances ");
+            log.info("il y a un produit");
 
         } else {
 
-            //log.info("il y a relances");
+            log.info("il n'y a pas de produit");
         }
         
         

@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiResponses;
 import net.nicolasdot.meal_service.entity.Reporting;
 import net.nicolasdot.meal_service.exceptions.ReportingNotPossibleException;
 import net.nicolasdot.meal_service.services.interfaces.IReportingService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,8 @@ public class ReportingController {
 
     @Autowired
     private IReportingService iReportingService;
+    
+    private static final Logger log = LogManager.getLogger(MealTypeController.class);
 
     @ApiOperation("Récupère un reporting sur les repas des 7 derniers jours pour un utilisateur")
     @ApiResponses(value = {
@@ -31,6 +35,7 @@ public class ReportingController {
     @GetMapping(value = "/api/user/reportings")
     public ResponseEntity<Reporting> getReportingMeals(@RequestParam(name = "user", defaultValue = "") String userId) throws ReportingNotPossibleException {
 
+        log.debug("getReportingMeals()");
         Reporting reporting = iReportingService.reporting(userId);
 
         return ResponseEntity.ok().body(reporting);

@@ -17,6 +17,8 @@ import net.nicolasdot.meal_service.services.interfaces.IMealService;
 import net.nicolasdot.meal_service.services.interfaces.IProxyService;
 import net.nicolasdot.meal_service.specifications.ConsumableCriteria;
 import net.nicolasdot.meal_service.specifications.ConsumableSpecification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +41,8 @@ public class ConsumableServiceImpl implements IConsumableService {
     @Autowired
     IProxyService iProxy;
 
+    private static final Logger log = LogManager.getLogger(ConsumableServiceImpl.class);
+
     @Override
     public Consumable addConsumable(ConsumableDTO consumableDTO) throws EntityNotFoundException, NotPossibleException {
 
@@ -46,21 +50,21 @@ public class ConsumableServiceImpl implements IConsumableService {
 
         if (mealFind == null) {
 
-            //log.error("Le repas n'existe pas !");
+            log.error("Le repas n'existe pas !");
             throw new EntityNotFoundException("Le repas n'existe pas !");
 
         }
 
         if (mealFind.getValidate()) {
 
-            //log.error("Le repas n'existe pas !");
+            log.error("Le repas est validate !");
             throw new NotPossibleException("Le repas est validate !");
 
         }
 
         if (consumableDTO.getQuantity() <= 0) {
 
-            //log.error("Le repas n'existe pas !");
+            log.error("Il n'y a pas de quantité !");
             throw new NotPossibleException("Il n'y a pas de quantité !");
 
         }
@@ -69,7 +73,6 @@ public class ConsumableServiceImpl implements IConsumableService {
 
         Optional<Consumable> consumablefind = iConsumableRepository.findByProduitIdAndMealId(Long.valueOf(consumableDTO.getProduitId()), Long.valueOf(consumableDTO.getMealId()));
 
-        // séparer en 2 les testes voir remove 
         if (produitFind.isPresent() && consumablefind.isEmpty()) {
 
             Consumable consumable = new Consumable();
@@ -106,10 +109,12 @@ public class ConsumableServiceImpl implements IConsumableService {
 
         } else if (produitFind.isPresent() && !consumablefind.isEmpty()) {
 
+            log.error("Le produit est déjà dans le menue !");
             throw new NotPossibleException("Le produit est déjà dans le menue !");
 
         } else {
 
+            log.error("Le produit n'existe pas !");
             throw new NotPossibleException("Le produit n'existe pas !");
 
         }
@@ -127,18 +132,17 @@ public class ConsumableServiceImpl implements IConsumableService {
 
         } else if (ce.isPresent() && ce.get().getMeal().getValidate()) {
 
+            log.error("Le repas est validé");
             throw new NotPossibleException("Le repas est validé");
 
         } else {
 
-            //log.error("Le repas n'existe pas !");
+            log.error("Le consommation n'existe pas !");
             throw new EntityNotFoundException("La consommation n'existe pas !");
         }
 
     }
 
-    // update (quantity)
-    // si -12 erreur quantity négative
     @Override
     public Page<Consumable> getAllConsumablesByCriteria(ConsumableCriteria consumableCriteria, int page, int size) {
 
@@ -154,6 +158,7 @@ public class ConsumableServiceImpl implements IConsumableService {
 
         if (!consumableFind.isPresent()) {
 
+            log.error("Le consommation n'existe pas !");
             throw new EntityNotFoundException("La consommation n'existe pas !");
         }
 

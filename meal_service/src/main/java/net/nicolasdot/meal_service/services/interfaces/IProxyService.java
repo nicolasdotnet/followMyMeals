@@ -10,6 +10,12 @@ import org.springframework.web.client.RestClientException;
  */
 public interface IProxyService {
 
+    /**
+     * method to get a produit by id
+     *
+     * @param produitId
+     * @return produit optional object find
+     */
     Optional<Produit> getProduitById(Long produitId) throws RestClientException;
 
 }

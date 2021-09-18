@@ -77,3 +77,8 @@ A la racine du projet Front-service, exécutez la commande ```mvn spring-boot:ru
 Il existe un compte utilisateur dans la base de demo :
 
 - Identifiant : nicolas@fakemail.com Mot de passe : 123
+
+### Documentation des api stock et meals :
+Stock-service à l'adresse http://localhost:2222/swagger-ui.html
+
+Meals-service à l'adresse http://localhost:3333/swagger-ui.html
